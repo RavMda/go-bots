@@ -3,41 +3,15 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"go-pen/bot"
+	"go-pen/config"
 	"go-pen/methods"
 	"log"
 	"os"
-	"strconv"
-	"strings"
 	"time"
 
 	"h12.io/socks"
 )
-
-func getArguments(cleanArgs []string) (string, int, int) {
-	argsMessage := "Arguments: <ip:port> <threads> <loop>"
-
-	if len(cleanArgs) < 3 {
-		fmt.Println(argsMessage)
-		os.Exit(1) // is it a good way to do that....
-	}
-
-	var serverAddress = cleanArgs[0]
-
-	if !strings.Contains(serverAddress, ":") {
-		fmt.Println(argsMessage)
-		os.Exit(1)
-	}
-
-	threads, err := strconv.Atoi(cleanArgs[1])
-	loop, errn := strconv.Atoi(cleanArgs[2])
-
-	if err != nil || errn != nil {
-		fmt.Println(argsMessage)
-		os.Exit(1)
-	}
-
-	return serverAddress, threads, loop
-}
 
 func parseProxies() []string {
 	file, err := os.Open("proxies.txt")
@@ -81,53 +55,32 @@ func connect(proxyAddress string, serverAddress string, data *methods.Data, guar
 	}
 }
 
-/*
-func connectBot(proxyAddress string, serverAddress string, data *methods.Data, guard chan struct{}) {
+func createProxyBot(proxyAddress string, serverAddress string, config *config.Config) {
 	address := fmt.Sprintf("socks4://%s?timeout=5s", proxyAddress)
 
 	dialSocks := socks.Dial(address)
 	conn, err := dialSocks("tcp", serverAddress)
 
 	if err != nil {
-
-	}
-
-	methods.SlowBot(&data)
-	//conn, err := dialSocks("tcp", serverAddress)
-}
-*/
-
-const (
-	host = "ravmda.aternos.me"
-	port = "53799"
-)
-
-func createProxyBot(proxyAddress string, serverAddress string, data *methods.Data, guard chan struct{}) {
-	address := fmt.Sprintf("socks4://%s?timeout=5s", proxyAddress)
-
-	dialSocks := socks.Dial(address)
-	conn, err := dialSocks("tcp", serverAddress)
-
-	if err != nil {
-		<-guard
+		<-config.Guard
+		log.Printf("Dial: %v", err)
 	} else {
-		methods.CreateBot(data, conn, guard)
+		bot.Maidan(config, conn)
 	}
 }
 
 func main() {
 	proxies := parseProxies()
-	data := methods.Data{Host: host, Port: port}
+	config := config.GetConfig()
 
-	connections := 20 //, _ := strconv.Atoi(os.Args[1:][0])
-
-	guard := make(chan struct{}, connections)
-	fmt.Println(len(guard))
+	config.Address = config.Host + ":" + config.Port
+	config.Guard = make(chan struct{}, config.Connections)
 
 	for {
 		for _, proxy := range proxies {
-			guard <- struct{}{}
-			go createProxyBot(proxy, host+":"+port, &data, guard)
+			config.Guard <- struct{}{}
+			go createProxyBot(proxy, config.Address, config)
+			time.Sleep(10 * time.Millisecond)
 		}
 	}
 }

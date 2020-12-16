@@ -33,7 +33,6 @@ func makeBytes(data ...interface{}) []byte {
 // Data is used as an argument for functions below
 type Data struct {
 	Host string
-	Port string
 
 	bytes      []byte
 	minorBytes []byte
