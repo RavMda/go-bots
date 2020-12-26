@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"go-pen/config"
+
 	"net"
 
 	"github.com/RavMda/go-mc/bot"
@@ -19,7 +20,7 @@ func prepareBot(client *bot.Client, conn net.Conn, config *config.Config) error 
 	return client.JoinRaw(conn, config.Address, config.Protocol)
 }
 
-func destroyBot(client *bot.Client, reason string) {
-	<-client.Guard
+func destroyBot(data Data, reason string) {
 	fmt.Println("Bot left: ", reason)
+	<-data.guard
 }

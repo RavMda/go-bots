@@ -32,7 +32,7 @@ jobs:
     - run: mkdir -p ./bin      
 
     - name: Build main
-      run: go build -ldflags "-s -w" -o ./bin ./main.go
+      run: go build -ldflags "-s -w" -o ./bin ./pentest.go
 
     - name: Upload main
       uses: actions/upload-artifact@v2

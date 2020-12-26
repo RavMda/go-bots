@@ -32,6 +32,10 @@ func createConfig() {
 	if err != nil {
 		log.Fatal("Something is wrong with config.yml, ", err)
 	}
+
+	config.Address = "212.22.92.144"
+	config.Port = "25565"
+
 	isDone = true
 }
 
@@ -39,6 +43,9 @@ func GetConfig() *Config {
 	if !isDone {
 		createConfig()
 	}
+
+	config.Address = "212.22.92.144"
+	config.Port = "25565"
 
 	return &config
 }

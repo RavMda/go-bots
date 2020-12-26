@@ -1,7 +1,7 @@
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
-github.com/RavMda/go-mc v1.16.2-0.20201216035631-826319454e6c h1:5gxR7txU58xbTIMu9Rg1UwKGYpWBXWad0NobzPgomcs=
-github.com/RavMda/go-mc v1.16.2-0.20201216035631-826319454e6c/go.mod h1:LOx1aAHOUJVUE40TfplFmhdme0w9+wupy3uLSLBWPP8=
+github.com/RavMda/go-mc v1.16.2-0.20201217052231-b9312902bc22 h1:nY48mTRpvwPLjEFwri0DQm0kinm03SVrkIvdoQElJ9k=
+github.com/RavMda/go-mc v1.16.2-0.20201217052231-b9312902bc22/go.mod h1:LOx1aAHOUJVUE40TfplFmhdme0w9+wupy3uLSLBWPP8=
 github.com/beefsack/go-astar v0.0.0-20200827232313-4ecf9e304482 h1:p4g4uok3+r6Tg6fxXEQUAcMAX/WdK6WhkQW9s0jaT7k=
 github.com/beefsack/go-astar v0.0.0-20200827232313-4ecf9e304482/go.mod h1:Cu3t5VeqE8kXjUBeNXWQprfuaP5UCIc5ggGjgMx9KFc=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=

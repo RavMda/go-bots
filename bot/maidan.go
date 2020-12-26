@@ -7,6 +7,7 @@ import (
 	"math"
 	"math/rand"
 	"net"
+
 	"time"
 
 	"github.com/RavMda/go-mc/bot"
@@ -15,16 +16,22 @@ import (
 	"github.com/RavMda/go-mc/net/ptypes"
 )
 
-func Maidan(conf *config.Config, conn net.Conn) {
+func Maidan(conn net.Conn, data Data) {
 	var client = bot.NewClient()
+	var config = config.GetConfig()
 
-	if err := prepareBot(client, conn, conf); err != nil {
-		destroyBot(client, err.Error())
+	data.Client = client
+	data.guard = client.Guard
+
+	if err := prepareBot(client, conn, config); err != nil {
+		destroyBot(data, err.Error())
+		return
 	}
 
 	client.Events.GameStart = onGameStart
 	client.Events.Disconnect = onDisconnect
 	client.Events.HealthChange = onHealthChange
+	client.Events.Die = onDeath
 
 	fmt.Println("Login success.")
 
@@ -46,7 +53,7 @@ func onGameStart(client *bot.Client) error {
 }
 
 func onDisconnect(client *bot.Client, reason chat.Message) error {
-	destroyBot(client, "Bot left.")
+	destroyBot(Data{guard: client.Guard}, "Bot left.")
 	return nil
 }
 
@@ -84,7 +91,7 @@ func doSpam(client *bot.Client) {
 }
 
 func doActivity(client *bot.Client) {
-	var num = new(float64)
+	var num = float64(0)
 
 	// arm swinging
 	go func(client *bot.Client) {
@@ -94,18 +101,12 @@ func doActivity(client *bot.Client) {
 		}
 	}(client)
 
-	// increment number for further usage
-	go func(num *float64) {
-		for {
-			*num = *num + 0.1
-			time.Sleep(10 * time.Millisecond)
-		}
-	}(num)
-
 	// client "movement"
 	for {
-		sin := math.Sin(*num)
-		cos := math.Cos(*num)
+		num = num + 0.1
+
+		sin := math.Sin(num)
+		cos := math.Cos(num)
 
 		client.Conn().WritePacket(ptypes.PositionAndLookServerbound{
 			X:        packet.Double(client.Pos.X),
