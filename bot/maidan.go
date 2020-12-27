@@ -80,7 +80,7 @@ func doSpam(client *bot.Client) {
 	config := config.GetConfig()
 
 	if config.Register {
-		client.Chat("/register qweqwe123")
+		client.Chat(config.RegisterCommand)
 		time.Sleep(2 * time.Second)
 	}
 

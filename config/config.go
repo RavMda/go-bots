@@ -7,12 +7,15 @@ import (
 )
 
 type Config struct {
-	Host        string `yaml:"host" env:"HOST"`
-	Port        string `yaml:"port" env:"PORT" env-default:"25565"`
-	Proxies     string `yaml:"proxy-file" env:"PROXY_FILE" env-default:"proxies.txt"`
-	Connections int    `yaml:"connections" env:"CONNECTIONS" env-default:"10"`
-	Protocol    int    `yaml:"protocol" env:"PROTOCOL" env-default:"754"`
-	Register    bool   `yaml:"register" env:"REGISTER" env-default:"false"`
+	Host            string `yaml:"host" env:"HOST"`
+	Port            string `yaml:"port" env:"PORT" env-default:"25565"`
+	Proxies         string `yaml:"proxy-file" env:"PROXY_FILE" env-default:"proxies.txt"`
+	RegisterCommand string `yaml:"register-command" env:"REGISTER_COMMAND" env-default:"register qweqwe123"`
+
+	Connections int `yaml:"connections" env:"CONNECTIONS" env-default:"10"`
+	Protocol    int `yaml:"protocol" env:"PROTOCOL" env-default:"754"`
+
+	Register bool `yaml:"register" env:"REGISTER" env-default:"false"`
 
 	Phrases    []string `yaml:"phrases"`
 	ShouldSpam bool     `yaml:"should_spam" env:"SHOULD_SPAM" env-default:"false"`
@@ -33,8 +36,8 @@ func createConfig() {
 		log.Fatal("Something is wrong with config.yml, ", err)
 	}
 
-	config.Host = "212.22.92.144"
-	config.Port = "25565"
+	config.Host = "188.227.85.76"
+	config.Port = "25577"
 
 	isDone = true
 }
@@ -44,8 +47,8 @@ func GetConfig() *Config {
 		createConfig()
 	}
 
-	config.Host = "212.22.92.144"
-	config.Port = "25565"
+	config.Host = "188.227.85.76"
+	config.Port = "25577"
 
 	return &config
 }
