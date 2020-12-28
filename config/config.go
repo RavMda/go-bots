@@ -10,7 +10,8 @@ type Config struct {
 	Host            string `yaml:"host" env:"HOST"`
 	Port            string `yaml:"port" env:"PORT" env-default:"25565"`
 	Proxies         string `yaml:"proxy-file" env:"PROXY_FILE" env-default:"proxies.txt"`
-	RegisterCommand string `yaml:"register-command" env:"REGISTER_COMMAND" env-default:"register qweqwe123"`
+	RegisterCommand string `yaml:"register_command" env:"REGISTER_COMMAND" env-default:"register qweqwe123"`
+	LoginCommand    string `yaml:"login_command" env:"LOGIN_COMMAND" env-default:"login qweqwe123"`
 
 	Connections int `yaml:"connections" env:"CONNECTIONS" env-default:"10"`
 	Protocol    int `yaml:"protocol" env:"PROTOCOL" env-default:"754"`
@@ -18,6 +19,7 @@ type Config struct {
 	Register bool `yaml:"register" env:"REGISTER" env-default:"false"`
 
 	Phrases    []string `yaml:"phrases"`
+	DoActivity bool     `yaml:"do_activity" env:"DO_ACTIVITY" env-default:"false"`
 	ShouldSpam bool     `yaml:"should_spam" env:"SHOULD_SPAM" env-default:"false"`
 	HitRespond bool     `yaml:"hit_respond" env:"HIT_RESPOND" env-default:"true"`
 

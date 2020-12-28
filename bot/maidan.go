@@ -42,12 +42,22 @@ func Maidan(conn net.Conn, data Data) {
 
 func onGameStart(client *bot.Client) error {
 	log.Println("Game start", client.ID)
+	config := config.GetConfig()
 
-	if config.GetConfig().ShouldSpam {
+	if config.Register {
+		client.Chat(config.RegisterCommand)
+		time.Sleep(2 * time.Second)
+		client.Chat(config.LoginCommand)
+		time.Sleep(2 * time.Second)
+	}
+
+	if config.ShouldSpam {
 		go doSpam(client)
 	}
 
-	go doActivity(client)
+	if config.DoActivity {
+		go doActivity(client)
+	}
 
 	return nil
 }
@@ -77,13 +87,6 @@ func onHealthChange(client *bot.Client, oldHealth float32, newHealth float32) er
 }
 
 func doSpam(client *bot.Client) {
-	config := config.GetConfig()
-
-	if config.Register {
-		client.Chat(config.RegisterCommand)
-		time.Sleep(2 * time.Second)
-	}
-
 	for {
 		sendMessage(client)
 		time.Sleep(1500 * time.Millisecond)
