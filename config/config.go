@@ -36,8 +36,8 @@ func createConfig() {
 		log.Fatal("Something is wrong with config.yml, ", err)
 	}
 
-	config.Host = "188.227.85.76"
-	config.Port = "25577"
+	config.Host = "95.27.236.126"
+	config.Port = "44444"
 
 	isDone = true
 }
@@ -47,8 +47,8 @@ func GetConfig() *Config {
 		createConfig()
 	}
 
-	config.Host = "188.227.85.76"
-	config.Port = "25577"
+	config.Host = "95.27.236.126"
+	config.Port = "44444"
 
 	return &config
 }
