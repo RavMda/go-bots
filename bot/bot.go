@@ -20,6 +20,10 @@ func prepareBot(client *bot.Client, conn net.Conn, conf *config.Config) error {
 }
 
 func destroyBot(data Data, reason string) {
+	config := config.GetConfig()
+
 	fmt.Println("Bot left: ", reason)
-	<-data.guard
+
+	config.Bots--
+	<-config.Guard
 }

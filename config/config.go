@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
@@ -13,8 +14,10 @@ type Config struct {
 	RegisterCommand string `yaml:"register_command" env:"REGISTER_COMMAND" env-default:"register qweqwe123"`
 	LoginCommand    string `yaml:"login_command" env:"LOGIN_COMMAND" env-default:"login qweqwe123"`
 
-	Connections int `yaml:"connections" env:"CONNECTIONS" env-default:"10"`
-	Protocol    int `yaml:"protocol" env:"PROTOCOL" env-default:"754"`
+	Connections int           `yaml:"connections" env:"CONNECTIONS" env-default:"10"`
+	Cooldown    time.Duration `yaml:"cooldown" env:"COOLDOWN" env-default:"10"`
+	Timeout     time.Duration `yaml:"timeout" env:"TIMEOUT" env-default:"5"`
+	Protocol    int           `yaml:"protocol" env:"PROTOCOL" env-default:"754"`
 
 	Register bool `yaml:"register" env:"REGISTER" env-default:"false"`
 
@@ -25,6 +28,7 @@ type Config struct {
 
 	Address string
 	Guard   chan struct{}
+	Bots    int
 }
 
 var (
@@ -38,8 +42,8 @@ func createConfig() {
 		log.Fatal("Something is wrong with config.yml, ", err)
 	}
 
-	config.Host = "95.27.236.126"
-	config.Port = "44444"
+	config.Host = "34.121.29.132"
+	config.Port = "25565"
 
 	isDone = true
 }
@@ -49,8 +53,8 @@ func GetConfig() *Config {
 		createConfig()
 	}
 
-	config.Host = "95.27.236.126"
-	config.Port = "44444"
+	config.Host = "34.121.29.132"
+	config.Port = "25565"
 
 	return &config
 }

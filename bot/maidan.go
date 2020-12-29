@@ -23,6 +23,8 @@ func Maidan(conn net.Conn, data Data) {
 	data.Client = client
 	data.guard = client.Guard
 
+	config.Bots++
+
 	if err := prepareBot(client, conn, config); err != nil {
 		destroyBot(data, err.Error())
 		return
@@ -41,14 +43,15 @@ func Maidan(conn net.Conn, data Data) {
 }
 
 func onGameStart(client *bot.Client) error {
-	log.Println("Game start", client.ID)
 	config := config.GetConfig()
+
+	fmt.Println(config.Bots, "Bots connected")
 
 	if config.Register {
 		client.Chat(config.RegisterCommand)
-		time.Sleep(2 * time.Second)
+		time.Sleep(1 * time.Second)
 		client.Chat(config.LoginCommand)
-		time.Sleep(2 * time.Second)
+		time.Sleep(1 * time.Second)
 	}
 
 	if config.ShouldSpam {
