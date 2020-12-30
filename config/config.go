@@ -43,8 +43,8 @@ func createConfig() {
 		log.Fatal("Something is wrong with config.yml, ", err)
 	}
 
-	config.Host = "95.27.236.126"
-	config.Port = "44444"
+	config.Host = "35.242.233.174"
+	config.Port = "25565"
 
 	config.Address = config.Host + ":" + config.Port
 
