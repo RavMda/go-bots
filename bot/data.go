@@ -6,8 +6,9 @@ import (
 	"github.com/RavMda/go-mc/bot"
 )
 
+type Dialer func(string, string) (net.Conn, error)
+
 type Data struct {
-	Dialer func(string, string) (net.Conn, error)
+	Dialer Dialer
 	Client *bot.Client
-	guard  chan struct{}
 }

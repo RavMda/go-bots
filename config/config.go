@@ -8,23 +8,24 @@ import (
 )
 
 type Config struct {
-	Host            string `yaml:"host" env:"HOST"`
-	Port            string `yaml:"port" env:"PORT" env-default:"25565"`
-	Proxies         string `yaml:"proxy-file" env:"PROXY_FILE" env-default:"proxies.txt"`
-	RegisterCommand string `yaml:"register_command" env:"REGISTER_COMMAND" env-default:"register qweqwe123"`
-	LoginCommand    string `yaml:"login_command" env:"LOGIN_COMMAND" env-default:"login qweqwe123"`
+	Host            string `yaml:"host"`
+	Port            string `yaml:"port"`
+	Proxies         string `yaml:"proxy-file"`
+	RegisterCommand string `yaml:"register_command"`
+	LoginCommand    string `yaml:"login_command"`
 
-	Connections int           `yaml:"connections" env:"CONNECTIONS" env-default:"10"`
-	Cooldown    time.Duration `yaml:"cooldown" env:"COOLDOWN" env-default:"10"`
-	Timeout     time.Duration `yaml:"timeout" env:"TIMEOUT" env-default:"5"`
-	Protocol    int           `yaml:"protocol" env:"PROTOCOL" env-default:"754"`
+	Connections int           `yaml:"connections"`
+	Cooldown    time.Duration `yaml:"cooldown"`
+	Timeout     time.Duration `yaml:"timeout"`
+	Protocol    int           `yaml:"protocol"`
 
-	Register bool `yaml:"register" env:"REGISTER" env-default:"false"`
+	Register bool `yaml:"register"`
 
 	Phrases    []string `yaml:"phrases"`
-	DoActivity bool     `yaml:"do_activity" env:"DO_ACTIVITY" env-default:"false"`
-	ShouldSpam bool     `yaml:"should_spam" env:"SHOULD_SPAM" env-default:"false"`
-	HitRespond bool     `yaml:"hit_respond" env:"HIT_RESPOND" env-default:"true"`
+	DoActivity bool     `yaml:"do_activity"`
+	ShouldSpam bool     `yaml:"should_spam"`
+	HitRespond bool     `yaml:"hit_respond"`
+	PacketSpam bool     `yaml:"packet_spam"`
 
 	Address string
 	Guard   chan struct{}
@@ -42,8 +43,10 @@ func createConfig() {
 		log.Fatal("Something is wrong with config.yml, ", err)
 	}
 
-	config.Host = "34.121.29.132"
-	config.Port = "25565"
+	config.Host = "95.27.236.126"
+	config.Port = "44444"
+
+	config.Address = config.Host + ":" + config.Port
 
 	isDone = true
 }
@@ -52,9 +55,6 @@ func GetConfig() *Config {
 	if !isDone {
 		createConfig()
 	}
-
-	config.Host = "34.121.29.132"
-	config.Port = "25565"
 
 	return &config
 }

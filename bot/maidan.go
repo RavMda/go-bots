@@ -2,7 +2,9 @@ package bot
 
 import (
 	"fmt"
-	"go-pen/config"
+	. "go-pen/config"
+	"go-pen/methods"
+
 	"log"
 	"math"
 	"math/rand"
@@ -12,16 +14,17 @@ import (
 
 	"github.com/RavMda/go-mc/bot"
 	"github.com/RavMda/go-mc/chat"
+	_ "github.com/RavMda/go-mc/data/lang/en-us"
+	_ "github.com/RavMda/go-mc/data/lang/ru-ru"
 	"github.com/RavMda/go-mc/net/packet"
 	"github.com/RavMda/go-mc/net/ptypes"
 )
 
 func Maidan(conn net.Conn, data Data) {
 	var client = bot.NewClient()
-	var config = config.GetConfig()
+	var config = GetConfig()
 
 	data.Client = client
-	data.guard = client.Guard
 
 	config.Bots++
 
@@ -43,14 +46,14 @@ func Maidan(conn net.Conn, data Data) {
 }
 
 func onGameStart(client *bot.Client) error {
-	config := config.GetConfig()
+	config := GetConfig()
 
 	fmt.Println(config.Bots, "Bots connected")
 
 	if config.Register {
 		client.Chat(config.RegisterCommand)
-		time.Sleep(1 * time.Second)
 		client.Chat(config.LoginCommand)
+
 		time.Sleep(1 * time.Second)
 	}
 
@@ -62,11 +65,27 @@ func onGameStart(client *bot.Client) error {
 		go doActivity(client)
 	}
 
+	if config.PacketSpam {
+		go sendPackets(client)
+	}
+
 	return nil
 }
 
+func sendPackets(client *bot.Client) {
+	conn := client.Conn().Socket
+
+	for {
+		if methods.Extreme1(conn) != nil {
+			return
+		}
+
+		time.Sleep(100 * time.Millisecond)
+	}
+}
+
 func onDisconnect(client *bot.Client, reason chat.Message) error {
-	destroyBot(Data{guard: client.Guard}, "Bot left.")
+	destroyBot(Data{Client: client}, reason.String())
 	return nil
 }
 
@@ -75,14 +94,14 @@ func onDeath(client *bot.Client) error {
 }
 
 func sendMessage(client *bot.Client) error {
-	phrases := config.GetConfig().Phrases
+	phrases := GetConfig().Phrases
 	phrase := phrases[rand.Intn(len(phrases))]
 
 	return client.Chat(phrase)
 }
 
 func onHealthChange(client *bot.Client, oldHealth float32, newHealth float32) error {
-	if config.GetConfig().HitRespond && newHealth < oldHealth {
+	if GetConfig().HitRespond && newHealth < oldHealth {
 		sendMessage(client)
 	}
 
@@ -92,7 +111,7 @@ func onHealthChange(client *bot.Client, oldHealth float32, newHealth float32) er
 func doSpam(client *bot.Client) {
 	for {
 		sendMessage(client)
-		time.Sleep(1500 * time.Millisecond)
+		time.Sleep(2000 * time.Millisecond)
 	}
 }
 
@@ -123,6 +142,6 @@ func doActivity(client *bot.Client) {
 			OnGround: packet.Boolean(sin < 0),
 		}.Encode())
 
-		time.Sleep(10 * time.Millisecond)
+		time.Sleep(5 * time.Millisecond)
 	}
 }

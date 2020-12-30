@@ -30,7 +30,8 @@ func makeBytes(data ...interface{}) []byte {
 	return bytes
 }
 
-// Data is used as an argument for functions below
+var minorBytes = makeBytes(1, 0)
+
 type Data struct {
 	Host string
 
@@ -40,5 +41,4 @@ type Data struct {
 
 func (data *Data) supplyBytes(bytes []byte) {
 	data.bytes = bytes
-	data.minorBytes = makeBytes(1, 0)
 }
