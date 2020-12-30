@@ -1,4 +1,4 @@
-package yaml
+package config
 
 import (
 	"fmt"
@@ -12,7 +12,7 @@ import (
 
 // thanks to github.com/ilyakaznacheev/cleanenv
 
-func ReadConfig(path string, cfg interface{}) error {
+func readConfig(path string, cfg interface{}) error {
 	// open the configuration file
 	file, err := os.OpenFile(path, os.O_RDONLY|os.O_SYNC, 0)
 	if err != nil {

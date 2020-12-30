@@ -3,8 +3,6 @@ package config
 import (
 	"log"
 	"time"
-
-	"go-pen/yaml"
 )
 
 type Config struct {
@@ -40,7 +38,7 @@ var (
 )
 
 func createConfig() {
-	err := yaml.ReadConfig("config.yml", &config)
+	err := readConfig("config.yml", &config)
 	if err != nil {
 		log.Fatal("Something is wrong with config.yml, ", err)
 	}
