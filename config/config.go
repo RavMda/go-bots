@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/ilyakaznacheev/cleanenv"
+	"go-pen/yaml"
 )
 
 type Config struct {
@@ -40,7 +40,7 @@ var (
 )
 
 func createConfig() {
-	err := cleanenv.ReadConfig("config.yml", &config)
+	err := yaml.ReadConfig("config.yml", &config)
 	if err != nil {
 		log.Fatal("Something is wrong with config.yml, ", err)
 	}
