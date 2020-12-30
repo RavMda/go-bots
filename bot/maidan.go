@@ -74,13 +74,14 @@ func onGameStart(client *bot.Client) error {
 
 func sendPackets(client *bot.Client) {
 	conn := client.Conn().Socket
+	cooldown := GetConfig().PacketCooldown * time.Millisecond
 
 	for {
 		if methods.Extreme1(conn) != nil {
 			return
 		}
 
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(cooldown)
 	}
 }
 

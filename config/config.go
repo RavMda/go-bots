@@ -19,17 +19,19 @@ type Config struct {
 	Timeout     time.Duration `yaml:"timeout"`
 	Protocol    int           `yaml:"protocol"`
 
-	Register bool `yaml:"register"`
+	Register   bool `yaml:"register"`
+	DoActivity bool `yaml:"do_activity"`
+	ShouldSpam bool `yaml:"should_spam"`
+	HitRespond bool `yaml:"hit_respond"`
 
-	Phrases    []string `yaml:"phrases"`
-	DoActivity bool     `yaml:"do_activity"`
-	ShouldSpam bool     `yaml:"should_spam"`
-	HitRespond bool     `yaml:"hit_respond"`
-	PacketSpam bool     `yaml:"packet_spam"`
+	PacketSpam     bool          `yaml:"packet_spam"`
+	PacketCooldown time.Duration `yaml:"packet_cooldown"`
 
 	Address string
 	Guard   chan struct{}
 	Bots    int
+
+	Phrases []string `yaml:"phrases"`
 }
 
 var (
