@@ -31,10 +31,16 @@ jobs:
         fi
     - run: mkdir -p ./bin      
 
-    - name: Build main
+    - name: Build pentest
       run: go build -ldflags "-s -w" -o ./bin ./pentest.go
 
-    - name: Upload main
+    - name: Compress pentest
+      uses: gacts/upx@master
+      with:
+        file: './bin/pentest'
+        upx_args: '-9'
+
+    - name: Upload pentest
       uses: actions/upload-artifact@v2
       with:
         name: go-pen
