@@ -3,11 +3,10 @@ package bot
 import (
 	"encoding/hex"
 	"fmt"
-	"go-pen/config"
 	. "go-pen/config"
 	. "go-pen/guard"
+	"hash/fnv"
 	"math/rand"
-	"time"
 
 	"net"
 
@@ -19,9 +18,19 @@ const (
 	max = 15
 )
 
-func prepareBot(client *bot.Client, conn net.Conn, conf *config.Config) error {
-	rand.Seed(time.Now().UnixNano())
-	client.Auth.Name = GetName(rand.Intn(max-min+1) + min)
+var config = GetConfig()
+
+func hash(s string) uint64 {
+	h := fnv.New64a()
+	h.Write([]byte(s))
+	return h.Sum64()
+}
+
+func prepareBot(client *bot.Client, conn net.Conn, conf *Config) error {
+	seed := int64(hash(conn.RemoteAddr().String()))
+
+	rand.Seed(seed)
+	client.Auth.Name = GetName(rand.Intn(max-min+1)+min, seed)
 
 	id := bot.OfflineUUID(client.Auth.Name)
 	client.Auth.UUID = hex.EncodeToString(id[:])
@@ -30,10 +39,9 @@ func prepareBot(client *bot.Client, conn net.Conn, conf *config.Config) error {
 }
 
 func destroyBot(data Data, reason string) {
-	config := GetConfig()
 	guard := GetGuard()
 
-	fmt.Println("Bot left: ", reason)
+	fmt.Printf("Bot %s left: %s\n", data.Client.Name, reason)
 
 	config.Bots--
 	guard.Decrement()

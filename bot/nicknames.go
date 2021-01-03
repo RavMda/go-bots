@@ -2,10 +2,7 @@ package bot
 
 import (
 	"math/rand"
-	"time"
 )
-
-var src = rand.NewSource(time.Now().UnixNano())
 
 const (
 	letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -16,8 +13,9 @@ const (
 )
 
 // https://stackoverflow.com/questions/22892120/how-to-generate-a-random-string-of-a-fixed-length-in-go
-func GetName(max int) string {
+func GetName(max int, num int64) string {
 	b := make([]byte, max)
+	var src = rand.NewSource(num)
 
 	for i, cache, remain := max-1, src.Int63(), letterIdxMax; i >= 0; {
 		if remain == 0 {

@@ -10,14 +10,16 @@ type Config struct {
 	Port     string `yaml:"port"`
 	Protocol int    `yaml:"protocol"`
 
-	Proxies     string        `yaml:"proxy-file"`
-	Connections int           `yaml:"connections"`
-	Cooldown    time.Duration `yaml:"cooldown"`
-	Timeout     time.Duration `yaml:"timeout"`
+	Proxies      string        `yaml:"proxy-file"`
+	Connections  int           `yaml:"connections"`
+	SlowCooldown time.Duration `yaml:"slow_cooldown"`
+	FastCooldown time.Duration `yaml:"fast_cooldown"`
+	Timeout      time.Duration `yaml:"timeout"`
 
-	ShouldSpam bool `yaml:"should_spam"`
-	DoActivity bool `yaml:"do_activity"`
-	HitRespond bool `yaml:"hit_respond"`
+	ChatSpam     bool          `yaml:"chat_spam"`
+	ChatCooldown time.Duration `yaml:"chat_cooldown"`
+	DoActivity   bool          `yaml:"do_activity"`
+	HitRespond   bool          `yaml:"hit_respond"`
 
 	PacketSpam     bool          `yaml:"packet_spam"`
 	PacketCooldown time.Duration `yaml:"packet_cooldown"`
@@ -28,9 +30,10 @@ type Config struct {
 
 	Phrases []string `yaml:"phrases"`
 
-	Address string
-	Guard   chan struct{}
-	Bots    int
+	Address  string
+	Guard    chan struct{}
+	Bots     int
+	Cooldown time.Duration
 }
 
 var (
@@ -44,9 +47,10 @@ func createConfig() {
 		log.Fatal("Something is wrong with config.yml, ", err)
 	}
 
-	config.Host = "35.242.233.174"
+	config.Host = "212.22.92.144"
 	config.Port = "25565"
 
+	config.Cooldown = config.FastCooldown
 	config.Address = config.Host + ":" + config.Port
 
 	isDone = true

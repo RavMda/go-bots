@@ -2,7 +2,6 @@ package bot
 
 import (
 	"fmt"
-	. "go-pen/config"
 	"go-pen/methods"
 
 	"log"
@@ -22,7 +21,6 @@ import (
 
 func Maidan(conn net.Conn, data Data) {
 	var client = bot.NewClient()
-	var config = GetConfig()
 
 	data.Client = client
 
@@ -46,18 +44,17 @@ func Maidan(conn net.Conn, data Data) {
 }
 
 func onGameStart(client *bot.Client) error {
-	config := GetConfig()
-
 	fmt.Println(config.Bots, "Bots connected")
 
 	if config.Register {
+		time.Sleep(10 * time.Second)
 		client.Chat(config.RegisterCommand)
+		time.Sleep(2 * time.Second)
 		client.Chat(config.LoginCommand)
-
-		time.Sleep(1 * time.Second)
+		time.Sleep(2 * time.Second)
 	}
 
-	if config.ShouldSpam {
+	if config.ChatSpam {
 		go doSpam(client)
 	}
 
@@ -74,7 +71,7 @@ func onGameStart(client *bot.Client) error {
 
 func sendPackets(client *bot.Client) {
 	conn := client.Conn().Socket
-	cooldown := GetConfig().PacketCooldown * time.Millisecond
+	cooldown := config.PacketCooldown * time.Millisecond
 
 	for {
 		if methods.Extreme1(conn) != nil {
@@ -95,14 +92,14 @@ func onDeath(client *bot.Client) error {
 }
 
 func sendMessage(client *bot.Client) error {
-	phrases := GetConfig().Phrases
+	phrases := config.Phrases
 	phrase := phrases[rand.Intn(len(phrases))]
 
 	return client.Chat(phrase)
 }
 
 func onHealthChange(client *bot.Client, oldHealth float32, newHealth float32) error {
-	if GetConfig().HitRespond && newHealth < oldHealth {
+	if config.HitRespond && newHealth < oldHealth {
 		sendMessage(client)
 	}
 
