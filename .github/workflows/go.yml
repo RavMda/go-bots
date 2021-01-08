@@ -37,7 +37,7 @@ jobs:
     - name: Compress go-bots
       uses: gacts/upx@master
       with:
-        file: './bin/pentest'
+        file: './mc-bots'
         upx_args: '-9'
 
     - name: Upload go-bots
