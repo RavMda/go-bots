@@ -1,7 +1,7 @@
 package methods
 
 import (
-	. "go-pen/config"
+	. "go-bots/config"
 	"net"
 )
 

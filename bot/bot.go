@@ -3,8 +3,8 @@ package bot
 import (
 	"encoding/hex"
 	"fmt"
-	. "go-pen/config"
-	. "go-pen/guard"
+	. "go-bots/config"
+	. "go-bots/guard"
 	"hash/fnv"
 	"math/rand"
 

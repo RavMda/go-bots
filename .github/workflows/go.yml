@@ -16,7 +16,7 @@ jobs:
     - name: Set up Go 1.x
       uses: actions/setup-go@v2
       with:
-        go-version: ^1.13
+        go-version: ^1.15
       id: go
 
     - name: Check out code into the Go module directory
@@ -31,18 +31,18 @@ jobs:
         fi
     - run: mkdir -p ./bin      
 
-    - name: Build pentest
-      run: go build -ldflags "-s -w" -o ./bin ./pentest.go
+    - name: Build go-bots
+      run: go build -ldflags "-s -w" -o ./mc-bots
 
-    - name: Compress pentest
+    - name: Compress go-bots
       uses: gacts/upx@master
       with:
         file: './bin/pentest'
         upx_args: '-9'
 
-    - name: Upload pentest
+    - name: Upload go-bots
       uses: actions/upload-artifact@v2
       with:
-        name: go-pen
+        name: go-bots
         path: ./bin
 

@@ -1,6 +1,6 @@
 package guard
 
-import "go-pen/config"
+import "go-bots/config"
 
 type Guard chan struct{}
 

@@ -1,8 +1,8 @@
 package proxies
 
 import (
-	"go-pen/bot"
-	"go-pen/config"
+	"go-bots/bot"
+	"go-bots/config"
 	"net"
 	"time"
 

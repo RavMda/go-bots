@@ -2,7 +2,7 @@ package bot
 
 import (
 	"fmt"
-	"go-pen/methods"
+	"go-bots/methods"
 
 	"log"
 	"math"

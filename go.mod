@@ -1,4 +1,4 @@
-module go-pen
+module go-bots
 
 go 1.15
 
