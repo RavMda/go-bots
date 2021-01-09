@@ -6,6 +6,7 @@ import (
 	. "go-bots/config"
 	. "go-bots/guard"
 	"hash/fnv"
+	"log"
 	"math/rand"
 
 	"net"
@@ -22,7 +23,12 @@ var config = GetConfig()
 
 func hash(s string) uint64 {
 	h := fnv.New64a()
-	h.Write([]byte(s))
+
+	_, err := h.Write([]byte(s))
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return h.Sum64()
 }
 

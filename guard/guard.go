@@ -1,6 +1,6 @@
 package guard
 
-import "go-bots/config"
+import . "go-bots/config"
 
 type Guard chan struct{}
 
@@ -18,7 +18,7 @@ func GetGuard() Guard {
 }
 
 func createGuard() {
-	config := config.GetConfig()
+	config := GetConfig()
 	guard = make(chan struct{}, config.Connections)
 
 	isCreated = true
