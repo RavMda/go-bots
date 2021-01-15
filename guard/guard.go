@@ -5,7 +5,7 @@ import . "go-bots/config"
 type Guard chan struct{}
 
 var (
-	isCreated bool = false
+	isCreated = false
 	guard     chan struct{}
 )
 

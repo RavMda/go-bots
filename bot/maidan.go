@@ -48,10 +48,10 @@ func onGameStart(client *bot.Client) error {
 
 	if config.Register {
 		time.Sleep(10 * time.Second)
+
 		client.Chat(config.RegisterCommand)
 		time.Sleep(2 * time.Second)
 		client.Chat(config.LoginCommand)
-		time.Sleep(2 * time.Second)
 	}
 
 	if config.ChatSpam {
@@ -71,14 +71,11 @@ func onGameStart(client *bot.Client) error {
 
 func sendPackets(client *bot.Client) {
 	conn := client.Conn().Socket
-	cooldown := config.PacketCooldown * time.Millisecond
 
-	for {
+	for range time.Tick(config.PacketCooldown * time.Millisecond) {
 		if methods.Extreme1(conn) != nil {
 			return
 		}
-
-		time.Sleep(cooldown)
 	}
 }
 
@@ -107,9 +104,8 @@ func onHealthChange(client *bot.Client, oldHealth float32, newHealth float32) er
 }
 
 func doSpam(client *bot.Client) {
-	for {
+	for range time.Tick(config.ChatCooldown * time.Millisecond) {
 		sendMessage(client)
-		time.Sleep(2000 * time.Millisecond)
 	}
 }
 
@@ -118,14 +114,13 @@ func doActivity(client *bot.Client) {
 
 	// arm swinging
 	go func(client *bot.Client) {
-		for {
+		for range time.Tick(250 * time.Millisecond) {
 			client.SwingArm(0)
-			time.Sleep(250 * time.Millisecond)
 		}
 	}(client)
 
 	// client "movement"
-	for {
+	for range time.Tick(5 * time.Millisecond) {
 		num = num + 0.1
 
 		sin := math.Sin(num)
@@ -140,6 +135,5 @@ func doActivity(client *bot.Client) {
 			OnGround: packet.Boolean(sin < 0),
 		}.Encode())
 
-		time.Sleep(5 * time.Millisecond)
 	}
 }
