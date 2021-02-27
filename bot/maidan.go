@@ -36,7 +36,7 @@ func Maidan(conn net.Conn, data Data) {
 	client.Events.HealthChange = onHealthChange
 	client.Events.Die = onDeath
 
-	fmt.Println("Login success.")
+	fmt.Println("Connect success.")
 
 	if err := client.HandleGame(); err != nil {
 		log.Fatal(err)

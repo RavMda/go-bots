@@ -47,9 +47,6 @@ func createConfig() {
 		log.Fatal("Something is wrong with config.yml, ", err)
 	}
 
-	config.Host = "212.22.92.144"
-	config.Port = "25565"
-
 	config.Cooldown = config.FastCooldown
 	config.Address = config.Host + ":" + config.Port
 

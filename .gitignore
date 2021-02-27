@@ -1,7 +1,6 @@
 /.vs/*
 *.exe
 proxies.txt
-config.yml
 bot/antibot.go
 names.txt
 /.idea/
