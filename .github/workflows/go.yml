@@ -44,4 +44,3 @@ jobs:
         with:
           name: go-bots
           path: ./mc-bots
-

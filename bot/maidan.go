@@ -19,7 +19,7 @@ import (
 	"github.com/RavMda/go-mc/net/ptypes"
 )
 
-func Maidan(conn net.Conn, data Data) {
+func Basic(conn net.Conn, data Data) {
 	var client = bot.NewClient()
 
 	data.Client = client

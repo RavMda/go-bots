@@ -24,7 +24,7 @@ func proxyBot(proxy string, address string) {
 	}
 
 	config.Cooldown = config.SlowCooldown
-	bot.Maidan(conn, bot.Data{Dialer: dialer})
+	bot.Basic(conn, bot.Data{Dialer: dialer})
 }
 
 func main() {
