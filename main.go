@@ -5,13 +5,14 @@ import (
 	. "go-bots/config"
 	. "go-bots/guard"
 	"go-bots/proxies"
+	"net"
 
 	"time"
 )
 
 var (
-	guard  = GetGuard()
-	config = GetConfig()
+	guard Guard
+	config *Config
 )
 
 func proxyBot(proxy string, address string) {
@@ -27,9 +28,30 @@ func proxyBot(proxy string, address string) {
 	bot.Basic(conn, bot.Data{Dialer: dialer})
 }
 
+func makeBot(address string) {
+	conn, err := net.Dial("tcp", address)
+
+	if err != nil {
+		panic(err)
+	}
+
+	bot.Basic(conn, bot.Data{Dialer: net.Dial})
+}
+
 func main() {
+	CreateConfig()
+	CreateGuard()
+	
+	guard = GetGuard()
+	config = GetConfig()
+
 	for range time.Tick(config.Cooldown * time.Millisecond) {
 		guard.Increment()
-		go proxyBot(proxies.GetProxy(), config.Address)
+
+		if config.UseProxies {
+			go proxyBot(proxies.GetProxy(), config.Address)
+		} else {
+			go makeBot(config.Address)
+		}
 	}
 }

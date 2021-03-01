@@ -8,6 +8,7 @@ import (
 	"hash/fnv"
 	"log"
 	"math/rand"
+	"time"
 
 	"net"
 
@@ -32,8 +33,16 @@ func hash(s string) uint64 {
 	return h.Sum64()
 }
 
+func makeSeed(address string) int64 {
+	if config.ReuseName {
+		return int64(hash(address))
+	}
+
+	return time.Now().UnixNano()
+}
+
 func prepareBot(client *bot.Client, conn net.Conn, conf *Config) error {
-	seed := int64(hash(conn.RemoteAddr().String()))
+	seed := makeSeed(conn.RemoteAddr().String())
 
 	rand.Seed(seed)
 	client.Auth.Name = GetName(rand.Intn(max-min+1)+min, seed)

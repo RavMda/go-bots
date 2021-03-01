@@ -10,7 +10,10 @@ type Config struct {
 	Port     string `yaml:"port"`
 	Protocol int    `yaml:"protocol"`
 
+	UseProxies   bool          `yaml:"use_proxies"`
 	Proxies      string        `yaml:"proxy-file"`
+
+	ReuseName    bool          `yaml:"reuse_name"`
 	Connections  int           `yaml:"connections"`
 	SlowCooldown time.Duration `yaml:"slow_cooldown"`
 	FastCooldown time.Duration `yaml:"fast_cooldown"`
@@ -41,7 +44,11 @@ var (
 	isDone bool
 )
 
-func createConfig() {
+func GetConfig() *Config {
+	return &config
+}
+
+func CreateConfig() {
 	err := readConfig("config.yml", &config)
 	if err != nil {
 		log.Fatal("Something is wrong with config.yml, ", err)
@@ -49,14 +56,4 @@ func createConfig() {
 
 	config.Cooldown = config.FastCooldown
 	config.Address = config.Host + ":" + config.Port
-
-	isDone = true
-}
-
-func GetConfig() *Config {
-	if !isDone {
-		createConfig()
-	}
-
-	return &config
 }
