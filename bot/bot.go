@@ -1,18 +1,16 @@
 package bot
 
 import (
-	"encoding/hex"
-	"fmt"
 	. "go-bots/config"
 	. "go-bots/guard"
 	"hash/fnv"
 	"log"
 	"math/rand"
+	"net"
 	"time"
 
-	"net"
-
 	"github.com/RavMda/go-mc/bot"
+	"github.com/RavMda/go-mc/offline"
 )
 
 const (
@@ -27,7 +25,7 @@ func hash(s string) uint64 {
 
 	_, err := h.Write([]byte(s))
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Hash error: ", err)
 	}
 
 	return h.Sum64()
@@ -41,22 +39,21 @@ func makeSeed(address string) int64 {
 	return time.Now().UnixNano()
 }
 
-func prepareBot(client *bot.Client, conn net.Conn, conf *Config) error {
+func PrepareBot(client *bot.Client, conn net.Conn) error {
 	seed := makeSeed(conn.RemoteAddr().String())
 
 	rand.Seed(seed)
+
 	client.Auth.Name = GetName(rand.Intn(max-min+1)+min, seed)
+	client.Auth.UUID = offline.NameToUUID(client.Auth.Name).String()
 
-	id := bot.OfflineUUID(client.Auth.Name)
-	client.Auth.UUID = hex.EncodeToString(id[:])
-
-	return client.JoinRaw(conn, conf.Address, conf.Protocol)
+	return client.JoinRaw(conn, config.Address, config.Protocol)
 }
 
-func destroyBot(data Data, reason string) {
+func DestroyBot(reason string) {
 	guard := GetGuard()
 
-	fmt.Printf("Bot %s left: %s\n", data.Client.Name, reason)
+	//fmt.Printf("Bot %s left: %s\n", data.Client.Name, reason)
 
 	config.Bots--
 	guard.Decrement()

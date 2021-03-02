@@ -1,4 +1,4 @@
-![Version Badge](https://img.shields.io/badge/version-v1.0-brightgreen)
+![Version Badge](https://img.shields.io/badge/Go-1.16-green)
 ![License Badge](https://img.shields.io/badge/license-GPL--3.0-orange)
 [![Go Report Card](https://goreportcard.com/badge/github.com/RavMda/go-bots)](https://goreportcard.com/report/github.com/RavMda/go-bots)
 
@@ -12,10 +12,10 @@ Go-Bots was created to help server owners stress-test their servers with bots
 ## Features
 - Convenient configuration via YAML
 - Register/Login on the server
-- Change protocol to the one you'd prefer [(check out this list)](https://wiki.vg/Protocol_version_numbers)
+- Change protocol to the one you prefer [(check out this list)](https://wiki.vg/Protocol_version_numbers)
 - Spam chat with custom phrases
 - "Smart" cooldown system
-- It can simulate jumps, arm swings and head rotations
+- ~~It can simulate jumps, arm swings and head rotations~~
 - Custom packet spam *(not tested, better not use it)*
 - Low RAM and CPU usage compared to some other solutions
 

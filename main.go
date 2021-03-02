@@ -1,7 +1,8 @@
 package main
 
 import (
-	"go-bots/bot"
+	"fmt"
+	"go-bots/bot/maidan"
 	. "go-bots/config"
 	. "go-bots/guard"
 	"go-bots/proxies"
@@ -11,12 +12,12 @@ import (
 )
 
 var (
-	guard Guard
+	guard  Guard
 	config *Config
 )
 
 func proxyBot(proxy string, address string) {
-	conn, dialer, err := proxies.Dial(proxy, address)
+	conn, err := proxies.Dial(proxy, address)
 
 	if err != nil {
 		config.Cooldown = config.FastCooldown
@@ -25,23 +26,24 @@ func proxyBot(proxy string, address string) {
 	}
 
 	config.Cooldown = config.SlowCooldown
-	bot.Basic(conn, bot.Data{Dialer: dialer})
+	maidan.CreateBot(conn)
 }
 
 func makeBot(address string) {
 	conn, err := net.Dial("tcp", address)
 
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		return
 	}
 
-	bot.Basic(conn, bot.Data{Dialer: net.Dial})
+	maidan.CreateBot(conn)
 }
 
 func main() {
 	CreateConfig()
 	CreateGuard()
-	
+
 	guard = GetGuard()
 	config = GetConfig()
 
