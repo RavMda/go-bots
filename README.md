@@ -1,5 +1,5 @@
-![Version Badge](https://img.shields.io/badge/Go-1.16-green)
-![License Badge](https://img.shields.io/badge/license-GPL--3.0-orange)
+![Go version](https://img.shields.io/github/go-mod/go-version/ravmda/go-bots?color=green)
+![License](https://img.shields.io/github/license/ravmda/go-bots)
 [![Go Report Card](https://goreportcard.com/badge/github.com/RavMda/go-bots)](https://goreportcard.com/report/github.com/RavMda/go-bots)
 
 # Go-Bots
