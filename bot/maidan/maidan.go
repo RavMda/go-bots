@@ -33,7 +33,7 @@ func CreateBot(conn net.Conn) {
 		GameStart:  onGameStart,
 		ChatMsg:    onChatMsg,
 		Disconnect: onDisconnect,
-		//Death:        onDeath,
+		Death:        onDeath,
 	}.Attach(client)
 
 	err := client.HandleGame()
@@ -86,9 +86,12 @@ func onDisconnect(client *mcbot.Client, reason chat.Message) error {
 	return nil
 }
 
-//func onDeath(client *mcbot.Client) error {
-//return client.Respawn()
-//}
+func onDeath(client *mcbot.Client) error {
+	return client.Conn.WritePacket(packet.Marshal(
+		packetid.ClientCommand,
+		packet.VarInt(0),
+	))
+}
 
 func randomMessage(client *mcbot.Client) {
 	phrases := config.Phrases

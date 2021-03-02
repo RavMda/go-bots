@@ -13,7 +13,7 @@ timeout: 5 # seconds
 
 chat_spam: false
 chat_cooldown: 3000 # milliseconds
-do_activity: false # swing arm + jump + head rotations
+#do_activity: false # swing arm + jump + head rotations # DISABLED NOW
 hit_respond: false
 
 packet_spam: false
