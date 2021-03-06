@@ -33,7 +33,7 @@ func CreateBot(conn net.Conn) {
 		GameStart:  onGameStart,
 		ChatMsg:    onChatMsg,
 		Disconnect: onDisconnect,
-		Death:        onDeath,
+		Death:      onDeath,
 	}.Attach(client)
 
 	err := client.HandleGame()

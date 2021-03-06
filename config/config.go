@@ -10,8 +10,8 @@ type Config struct {
 	Port     string `yaml:"port"`
 	Protocol int    `yaml:"protocol"`
 
-	UseProxies   bool          `yaml:"use_proxies"`
-	Proxies      string        `yaml:"proxy-file"`
+	UseProxies bool   `yaml:"use_proxies"`
+	Proxies    string `yaml:"proxy-file"`
 
 	ReuseName    bool          `yaml:"reuse_name"`
 	Connections  int           `yaml:"connections"`

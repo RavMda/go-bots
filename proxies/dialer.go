@@ -16,4 +16,3 @@ func Dial(proxy string, address string) (net.Conn, error) {
 
 	return conn, err
 }
-

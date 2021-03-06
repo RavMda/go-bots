@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	scanner  *bufio.Scanner
+	scanner *bufio.Scanner
 )
 
 func Prepare() {

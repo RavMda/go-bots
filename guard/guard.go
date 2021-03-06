@@ -5,7 +5,7 @@ import . "go-bots/config"
 type Guard chan struct{}
 
 var (
-	guard     chan struct{}
+	guard chan struct{}
 )
 
 func GetGuard() Guard {
