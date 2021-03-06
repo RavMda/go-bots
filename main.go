@@ -44,6 +44,8 @@ func main() {
 	CreateConfig()
 	CreateGuard()
 
+	proxies.Prepare()
+
 	guard = GetGuard()
 	config = GetConfig()
 

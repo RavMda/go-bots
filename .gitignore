@@ -4,3 +4,4 @@ proxies.txt
 bot/antibot.go
 names.txt
 /.idea/
+/.scannerwork

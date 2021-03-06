@@ -7,24 +7,10 @@ import (
 )
 
 var (
-	isLoaded bool
 	scanner  *bufio.Scanner
 )
 
-func GetProxy() string {
-	if !isLoaded {
-		parseProxies()
-	}
-
-	if scanner.Scan() {
-		return scanner.Text()
-	}
-
-	isLoaded = false
-	return GetProxy()
-}
-
-func parseProxies() {
+func Prepare() {
 	file, err := os.Open("proxies.txt")
 
 	if err != nil {
@@ -32,5 +18,12 @@ func parseProxies() {
 	}
 
 	scanner = bufio.NewScanner(file)
-	isLoaded = true
+}
+
+func GetProxy() string {
+	if !scanner.Scan() {
+		Prepare()
+	}
+
+	return scanner.Text()
 }
