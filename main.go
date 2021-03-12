@@ -44,10 +44,12 @@ func main() {
 	CreateConfig()
 	CreateGuard()
 
-	proxies.Prepare()
-
 	guard = GetGuard()
 	config = GetConfig()
+
+	if config.UseProxies {
+		proxies.Prepare()
+	}
 
 	for range time.Tick(config.Cooldown * time.Millisecond) {
 		guard.Increment()

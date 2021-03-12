@@ -39,6 +39,7 @@ func CreateBot(conn net.Conn) {
 	err := client.HandleGame()
 	if err != nil {
 		fmt.Println("Handle Error: ", err)
+		bot.DestroyBot(err.Error())
 	}
 }
 
