@@ -56,10 +56,10 @@ func onGameStart(client *mcbot.Client) error {
 	fmt.Println(config.Bots, "Bots connected")
 
 	if config.Register {
-		time.Sleep(10 * time.Second)
-
+		time.Sleep(3 * time.Second)
 		sendMessage(client, config.RegisterCommand)
-		time.Sleep(2 * time.Second)
+
+		time.Sleep(3 * time.Second)
 		sendMessage(client, config.LoginCommand)
 	}
 
