@@ -24,6 +24,7 @@ Go-Bots was created to help server owners stress-test their servers with bots
 - Bots can stuck in blocks when jumping because there are no physics involved
 - Packet spam can freeze on Windows systems
 - Older protocol versions may not work
+- ![help...](https://i.imgur.com/GAfisZH.png)
 
 ## Usage
 

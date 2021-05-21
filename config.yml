@@ -6,7 +6,7 @@ use_proxies: false
 proxies: proxies.txt
 
 reuse_name: false # it will always use same name per IP
-connections: 150
+connections: 5
 slow_cooldown: 5000 # milliseconds
 fast_cooldown: 250 # ms, this cooldown is used when proxy responds with error
 timeout: 5 # seconds
